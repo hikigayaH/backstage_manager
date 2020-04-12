@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <el-button type="primary" @click="exit">退出</el-button> -->
     <el-container class="page">
       <el-header class="header">
         <div class="avatar">

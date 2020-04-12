@@ -35,7 +35,7 @@
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="modifyuser(row.id)"></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteuser(row.id)"></el-button>
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button type="warning" icon="el-icon-setting" size="mini" @click="setroles(row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -102,6 +102,38 @@
         <el-button type="primary" @click="submitmodify">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 分配角色对话框 -->
+    <el-dialog
+      title="修改用户"
+      :visible.sync="setrolesDialogVisible"
+      width="50%"
+      @close="closesetrolesdialog"
+    >
+      <div class="setrole">
+        <div>
+          <p>当前用户： {{this.userinfo.username}}</p>
+        </div>
+        <div>
+          <p>用户角色： {{this.userinfo.role_name}}</p>
+        </div>
+        <p>
+          分配新角色：
+          <el-select v-model="rolevalue" placeholder="请选择">
+            <el-option
+              v-for="item in rolelist"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setrolesDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitrolesInfo">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -132,6 +164,7 @@ export default {
       total: 0,
       addDialogVisible: false,
       modifyDialogVisible: false,
+      setrolesDialogVisible: false,
       adduser: {
         username: "",
         password: "",
@@ -170,7 +203,12 @@ export default {
           { required: true, message: "请输入用户手机号", trigger: "blur" },
           { validator: checkmobile, trigger: "blur" }
         ]
-      }
+      },
+      //需要被分配权限的用户信息
+      userinfo: {},
+      rolelist: [],
+      //已经分配角色的id值
+      rolevalue: ""
     };
   },
   created() {
@@ -283,7 +321,43 @@ export default {
             message: "已取消删除"
           });
         });
-    }
+    },
+    setroles(userinfo) {
+      this.userinfo = userinfo;
+      this.setrolesDialogVisible = true;
+      this.$http
+        .get("roles")
+        .then(res => {
+          this.rolelist = res.data.data;
+        })
+        .catch(() => {
+          return this.$message.error("获取角色列表失败");
+        });
+    },
+    async submitrolesInfo() {
+      if (!this.rolevalue) {
+        return this.$message.error("请选择一个分配角色");
+      }
+      const { data: res } = await this.$http.put(
+        `users/${this.userinfo.id}/role`,
+        {
+          id: this.userinfo.id,
+          rid: this.rolevalue
+        }
+      );
+      if (res.meta.status === 200) {
+        console.log(res);
+        this.$message.success("更新角色成功");
+        this.getuserlist();
+        this.setrolesDialogVisible = false;
+      }else if(res.meta.status === 400){
+        this.$message.warning("admin账户不允许更改");
+        this.setrolesDialogVisible = false;
+      }else{
+        this.$message.error("更新角色失败");
+      }
+    },
+    closesetrolesdialog() {}
   }
 };
 </script>
@@ -291,5 +365,8 @@ export default {
 <style lang="less" scoped>
 .el-card {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+.setrole p {
+  margin: 30px 0;
 }
 </style>
