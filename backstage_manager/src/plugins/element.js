@@ -25,7 +25,12 @@ import {
     Tooltip,
     Pagination,
     Dialog,
-    MessageBox
+    MessageBox,
+    Alert,
+    Cascader,
+    Tabs,
+    TabPane,
+    Tag
 } from 'element-ui'
 
 Vue.use(Button)
@@ -52,5 +57,10 @@ Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
+Vue.use(Alert)
+Vue.use(Cascader)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Tag)
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message
