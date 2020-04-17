@@ -215,6 +215,7 @@ export default {
     },
     closedialog() {
       this.$refs["adduserref"].resetFields();
+      console.log(this.$refs["adduserref"].$children);
     },
     adduserDia() {
       this.$refs["adduserref"].validate(async valid => {

@@ -20,6 +20,20 @@ Vue.prototype.$http = axios;
 Vue.config.productionTip = false
 // Vue.use(ElementUI)
 
+Vue.filter('dateFormat', function (originValue) {
+  let buildtime = new Date(originValue);
+  let year = buildtime.getFullYear();
+  let month = buildtime.getMonth() + 1;
+  let date = buildtime.getDate();
+  let hours = buildtime.getHours();
+  let minutes = buildtime.getMinutes();
+  let seconds = buildtime.getSeconds();
+  let add_time_str = `${year}-${month}-${date < 10 ? "0" + date : date} ${
+    hours < 10 ? "0" + hours : hours
+    }:${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+  return add_time_str;
+})
+
 new Vue({
   router,
   store,
