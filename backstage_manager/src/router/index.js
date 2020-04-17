@@ -52,9 +52,16 @@ const routes = [
     {
       path: '/reports',
       component: () => import('@/components/reports/reports')
-    }],
+    },
+    {
+      name: 'addgoods',
+      path: '/goods/add',
+      component: () => import('@/components/commodity/add.vue')
+    }
+    ],
     component: () => import('@/components/Home')
-  }
+  },
+
 ]
 
 const router = new VueRouter({

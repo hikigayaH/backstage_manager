@@ -12,3 +12,24 @@
     margin-top: 15px;
     font-size: 12px;
 }
+
+.el-steps{
+    margin: 15px 0;
+}
+
+.el-step__main .el-step__title{
+    font-size: 12px;
+}
+
+.el-cascader-panel{
+    height: 200px;
+}
+
+.ql-editor{
+    height: 300px !important;
+    margin-bottom: 20px;
+}
+
+.quill-editor{
+    margin-bottom: 20px;
+}
